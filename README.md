@@ -1,5 +1,4 @@
-Github repo: https://github.com/davidpoza/summerproject
-
+## README
 Description
 - What we pretend with this project?
 
