@@ -1,6 +1,7 @@
 #define TINY_GSM_MODEM_SIM800
 #define TINY_GSM_USE_GPRS true
 #define TINY_GSM_USE_WIFI false
+#define TINY_GSM_DEBUG Serial
 
 #include <SoftwareSerial.h>
 #include <TinyGsmClient.h>
@@ -18,13 +19,24 @@ TinyGsmClient  client(modem);
 HttpClient     http(client, server, port);
 
 void setup() {
-  Serial.begin(115200); // Establece la velocidad para el Monitor Serie.
+  Serial.begin(38400); // Establece la velocidad para el Monitor Serie.
   Serial.println("SIM800L EVB");
-  sim800l.begin(115200); // Establece la velocidad para el sim800l.
+  sim800l.begin(38400); // Establece la velocidad para el sim800l.
 
 }
 
 void loop() {
+  if (!modem.restart()) {
+    Serial.println(F(" [fail]"));
+    Serial.println(F("************************"));
+    Serial.println(F(" Is your modem connected properly?"));
+    Serial.println(F(" Is your serial speed (baud rate) correct?"));
+    Serial.println(F(" Is your modem powered on?"));
+    Serial.println(F(" Do you use a good, stable power source?"));
+    Serial.println(F(" Try using File -> Examples -> TinyGSM -> tools -> AT_Debug to find correct configuration"));
+    Serial.println(F("************************"));
+    delay(10000);
+  }
   Serial.print("Waiting for network...");
   if (!modem.waitForNetwork()) {
     Serial.println(" fail");
@@ -36,8 +48,8 @@ void loop() {
   if (modem.isNetworkConnected()) { Serial.println("Network connected"); }
 
   modem.simUnlock("");
-  Serial.print("Modem status: ");
-  Serial.println(modem.getSimStatus());
+  Serial.print("Modem getModemInfo: ");
+  Serial.println(modem.getModemInfo());
 
   Serial.print(F("Connecting to "));
   Serial.print(apn);
