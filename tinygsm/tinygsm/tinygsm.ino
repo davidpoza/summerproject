@@ -9,8 +9,8 @@
 
 const char apn[]      = "orangeworld";
 
-const char server[]   = "vsh.pp.ua";
-const char resource[] = "/TinyGSM/logo.txt";
+const char server[]   = "aventurate.com";
+const char resource[] = "/favicon.ico";
 const int  port       = 80;
 
 SoftwareSerial sim800l(10,11); // RX y TX de Arduino.(pines 3 y 4 en arduino nano)
