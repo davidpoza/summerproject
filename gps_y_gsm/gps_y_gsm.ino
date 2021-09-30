@@ -12,21 +12,21 @@
 #include <SoftwareSerial.h>
 #include <TinyGsmClient.h>
 #include <ArduinoHttpClient.h>
-#include <TinyGPS.h>
+// #include <TinyGPS.h>
 
 const char apn[]      = "orangeworld";
-const char server[]   = "aventurate.com";
-const char resource[] = "/favicon.ico";
+const char server[]   = "vsh.pp.ua";
+const char resource[] = "/TinyGSM/logo.txt";
 const int  port       = 80;
 const int GATE_PIN = 3;
 
 SSD1306AsciiWire oled;
 SoftwareSerial sim800l(10,11);
-SoftwareSerial neo6m(7,8);
+// SoftwareSerial neo6m(7,8);
 TinyGsm        modem(sim800l);
-TinyGsmClient  client(modem);
+TinyGsmClient client(modem);
 HttpClient     http(client, server, port);
-TinyGPS gps;
+// TinyGPS gps;
 
 void(* resetFunc) (void) = 0; //declare reset function @ address 0
 
@@ -85,21 +85,18 @@ void loop() {
 
   oled.clear();
   oled.println(F("HTTP GET request..."));
-  http.connectionKeepAlive();
+ // http.connectionKeepAlive();
   int err = http.get(resource);
-  if (err != 0) {
-    oled.println(F("failed to connect to server"));
-    delay(10000);
-    return;
+  while (err != 0) {
+    oled.println(F("ERR con to server"));
+    oled.println(err);
+    delay(1000);
+    err = http.get(resource);
   }
 
   int status = http.responseStatusCode();
   oled.print(F("Response code: "));
   oled.println(status);
-  if (!status) {
-    delay(10000);
-    return;
-  }
 
   http.stop();
   oled.println(F("Server disconnected"));
